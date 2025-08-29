@@ -1,0 +1,16 @@
+pre-commit:
+  piped: true
+  jobs:
+    - run: npx prettier -u --check {staged_files}
+    - run: npx eslint {staged_files}
+      glob: "*.{js,ts,jsx,tsx}"
+
+pre-push:
+  commands:
+    ts:
+      run: tsc -b --noEmit
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit $1
