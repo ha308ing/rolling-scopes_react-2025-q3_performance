@@ -2,9 +2,10 @@ import { createPortal } from "react-dom";
 
 interface ModalProps {
   children: React.ReactNode;
+  onClose: () => void;
 }
 
-function Modal({ children }: ModalProps) {
+function Modal({ children, onClose }: ModalProps) {
   return createPortal(
     <div
       style={{
@@ -18,14 +19,26 @@ function Modal({ children }: ModalProps) {
     >
       <div
         style={{
-          inlineSize: "500px",
-          blockSize: "500px",
+          maxInlineSize: "60vw",
+          maxBlockSize: "60vh",
           background: "#fff",
           overflowY: "auto",
           padding: "1rem",
+          position: "relative",
         }}
+        className="box"
       >
         {children}
+        <button
+          onClick={onClose}
+          className="button is-white"
+          style={{ position: "absolute", top: 0, right: 0, margin: ".5rem" }}
+          type="button"
+        >
+          <span className="icon is-small">
+            <i className="fas fa-times"></i>
+          </span>
+        </button>
       </div>
     </div>,
     document.getElementById("modal")!,
