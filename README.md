@@ -1,5 +1,120 @@
 # React Performance
 
+## After Optimiation
+
+- optimized year selection component to render precomputed select options
+- used memoized values in Countries components - resulted in about 2x performance
+- using react compiler resulted in about 4x performance
+
+### Filter Countries
+
+![](https://i.postimg.cc/dVN6Ncxd/o2-country-optimized.png)
+
+- reduces Countries component rendering to up to 70ms
+
+#### With Compiler
+
+![](https://i.postimg.cc/7YJDBqh8/co2-country-compiler-2.png)
+
+### Year Selection
+
+![](https://i.postimg.cc/gJz0x1GS/co2-year-optimized.png)
+
+![](https://i.postimg.cc/HLHYNF8Y/co2-year-optimized-2.png)
+
+- reduced Countries rendering from 1s to 200ms
+
+#### With Compiler
+
+![](https://i.postimg.cc/wTkK43zr/co2-year-compiler-2.png)
+
+### Sorting
+
+![](https://i.postimg.cc/K85jmZ2k/co2-sorting-optimized.png)
+
+![](https://i.postimg.cc/tTs4dWVW/co2-sorting-optimized-2.png)
+
+#### With Compiler
+
+![](https://i.postimg.cc/Ls1N70fs/co2-sorting-compiler-2.png)
+
+### Selectin columns
+
+![](https://i.postimg.cc/3NL9MMxP/co2-columns-optimized.png)
+
+- selecting all columns triggers Countries render for 620ms - 670ms
+- selecting less or none columns triggers Countries render for 250ms
+
+#### With Compiler
+
+![](https://i.postimg.cc/26XyZTc4/co2-columns-compiler-2.png)
+
+![](https://i.postimg.cc/Jnt4MZrt/co2-columns-compiler-3.png)
+
+## Initial Profiling
+
+### Filter Countries
+
+#### Actions
+
+![](https://i.postimg.cc/k726QwGb/co2-country.webp)
+
+#### Profiling
+
+![](https://i.postimg.cc/prM5pm5x/co2-country-profile.webp)
+
+![](https://i.postimg.cc/PfvBHPMJ/2025-08-31-17-20-59.png)
+
+#### Conclusion
+
+- Changing filter country updates `Countries` component which triggers rerender of _year_ and _sort_ selectors. And _year_ selector takes the most time to render
+
+- `Countries` component that hosts all the state and data filtering and table is rendered for 73.6ms to 216ms.
+
+### Selecting Year
+
+#### Actions
+
+![](https://i.postimg.cc/ssDhT7w3/co2-year.webp)
+
+#### Profiling
+
+![](https://i.postimg.cc/CKFgLSxt/co2-year-profile.png)
+
+#### Conclusion
+
+- Changing Year triggers render of Countries for about 1s
+
+### Sorting
+
+#### Actions
+
+![](https://i.postimg.cc/7DvWpY2C/co2-sorting.webp)
+
+#### Profiling
+
+![](https://i.postimg.cc/wj7YP03y/co2-sorting-profile.webp)
+
+#### Conclusion
+
+- Changing Sorting triggers render of Countries for about 300ms
+
+### Selecting Columns
+
+#### Actions
+
+![](https://i.postimg.cc/08vNWJs8/co2-columns.webp)
+
+#### Profiling
+
+![](https://i.postimg.cc/hvWYGRL6/co2-columns-profile.png)
+
+![](https://i.postimg.cc/J47q5hzK/co2-columns-profile-ranked.png)
+
+#### Conclusion
+
+- Changing columns triggers render of Countries for about from 500ms to 1s, based on number of selected columns
+
 ## Application Requirements
 
 1. Fetch and Display Data
