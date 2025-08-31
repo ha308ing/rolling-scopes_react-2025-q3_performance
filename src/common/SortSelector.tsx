@@ -15,7 +15,7 @@ function SortSelector({ value, onChange }: SortSelectorProps) {
   return (
     <div className="select">
       <select value={value} onChange={handleChange}>
-        <option value={""}>default</option>
+        <option value="">default</option>
         {Object.values(SORT_VALUES).map((value) => (
           <option value={value} key={value}>
             {value}

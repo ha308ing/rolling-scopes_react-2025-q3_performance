@@ -6,8 +6,8 @@ const useData = () => {
     queryKey: ["data"],
     queryFn: async () => {
       const response = await fetch(
-        // "https://nyc3.digitaloceanspaces.com/owid-public/data/co2/owid-co2-data.json",
-        "/data.json",
+        "https://nyc3.digitaloceanspaces.com/owid-public/data/co2/owid-co2-data.json",
+        // "/data.json",
       );
 
       if (response.ok) {

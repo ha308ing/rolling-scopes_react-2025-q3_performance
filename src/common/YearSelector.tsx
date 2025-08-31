@@ -3,7 +3,11 @@ interface YearSelectorProps {
   onChange: (value: string) => void;
 }
 
-const years = Array.from(new Array(500), (_, i) => 2025 - i);
+const years = Array.from(new Array(500), (_, i) => 2025 - i).map((year) => (
+  <option value={year} key={year}>
+    {year}
+  </option>
+));
 
 function YearSelector({ value, onChange }: YearSelectorProps) {
   const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
@@ -15,14 +19,8 @@ function YearSelector({ value, onChange }: YearSelectorProps) {
   return (
     <div className="select">
       <select value={value} onChange={handleChange}>
-        <option value={""}>
-          <i>default</i>
-        </option>
-        {years.map((year) => (
-          <option value={year} key={year}>
-            {year}
-          </option>
-        ))}
+        <option value="">default</option>
+        {years}
       </select>
     </div>
   );

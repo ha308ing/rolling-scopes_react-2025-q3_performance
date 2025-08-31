@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalProps {
@@ -25,4 +26,4 @@ function Modal({ children, onClose }: ModalProps) {
   );
 }
 
-export default Modal;
+export default memo(Modal);

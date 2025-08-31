@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import useData from "@/hooks/useData";
 import type { YearRecordFields } from "@/types/yearRecordFields";
 import Modal from "@/common/Modal";
@@ -8,6 +8,7 @@ import CountryInput from "@/common/CountryInput";
 import SortSelector from "@/common/SortSelector";
 import { SORT_VALUES, type SortValues } from "@/constants/sortValues";
 import { REQUIRED_FIELDS } from "@/constants/requiredFields";
+import type { YearRecord } from "./types/yearRecord";
 
 function Countries() {
   const { data } = useData();
@@ -18,40 +19,58 @@ function Countries() {
   const [countryFilter, setCountryFilter] = useState<string>();
   const [sortValue, setSortValue] = useState<SortValues>();
 
+  const filterFunction = useCallback(
+    ([country]: [string, { iso_code?: string; data: YearRecord[] }]) => {
+      if (countryFilter) {
+        return country.toLowerCase().includes(countryFilter.toLowerCase());
+      } else {
+        return true;
+      }
+    },
+    [countryFilter],
+  );
+
+  const mapEntriesFunction = useCallback(
+    ([country, info]: [string, { iso_code?: string; data: YearRecord[] }]) => {
+      const { iso_code = "N/A", data } = info;
+
+      const activeRow = yearFilter
+        ? data.find((row) => row.year == +yearFilter)
+        : data[data.length - 1];
+
+      return {
+        country,
+        iso_code,
+        info: activeRow ?? {},
+      };
+    },
+    [yearFilter],
+  );
+
+  const sortFunction = useCallback(
+    (
+      a: { country: string; info: YearRecord },
+      b: { country: string; info: YearRecord },
+    ) => {
+      if (sortValue === SORT_VALUES.POPULATION_ASC) {
+        return (a.info?.population ?? 0) - (b.info?.population ?? 0);
+      } else if (sortValue === SORT_VALUES.POPULATION_DESC) {
+        return (b.info?.population ?? 0) - (a.info?.population ?? 0);
+      } else if (sortValue === SORT_VALUES.COUNTRY_ASC) {
+        return a.country.localeCompare(b.country);
+      } else if (sortValue === SORT_VALUES.COUNTRY_DESC) {
+        return b.country.localeCompare(a.country);
+      }
+      return 0;
+    },
+    [sortValue],
+  );
+
   const _countries = data
     ? Object.entries(data)
-        .filter(([country]) => {
-          if (countryFilter) {
-            return country.toLowerCase().includes(countryFilter.toLowerCase());
-          } else {
-            return true;
-          }
-        })
-        .map(([country, info]) => {
-          const { iso_code = "N/A", data } = info;
-
-          const activeRow = yearFilter
-            ? data.find((row) => row.year == +yearFilter)
-            : data[data.length - 1];
-
-          return {
-            country,
-            iso_code,
-            info: activeRow ?? {},
-          };
-        })
-        .sort((a, b) => {
-          if (sortValue === SORT_VALUES.POPULATION_ASC) {
-            return (a.info?.population ?? 0) - (b.info?.population ?? 0);
-          } else if (sortValue === SORT_VALUES.POPULATION_DESC) {
-            return (b.info?.population ?? 0) - (a.info?.population ?? 0);
-          } else if (sortValue === SORT_VALUES.COUNTRY_ASC) {
-            return a.country.localeCompare(b.country);
-          } else if (sortValue === SORT_VALUES.COUNTRY_DESC) {
-            return b.country.localeCompare(a.country);
-          }
-          return 0;
-        })
+        .filter(filterFunction)
+        .map(mapEntriesFunction)
+        .sort(sortFunction)
     : [];
 
   return (
