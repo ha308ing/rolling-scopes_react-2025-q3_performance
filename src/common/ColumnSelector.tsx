@@ -44,25 +44,8 @@ function ColumnSelector({
   };
 
   return (
-    <div
-      style={{
-        inlineSize: "500px",
-        padding: "1rem",
-        display: "flex",
-        flexFlow: "column nowrap",
-        gap: "3rem",
-        alignItems: "center",
-      }}
-    >
-      <ul
-        style={{
-          display: "flex",
-          flexFlow: "row wrap",
-          gap: "1rem",
-          justifyContent: "center",
-          position: "relative",
-        }}
-      >
+    <div className="column-selector-list-container">
+      <ul className="column-selector-list">
         {availableColumns.map((column) => (
           <li key={column}>
             <button
@@ -75,7 +58,7 @@ function ColumnSelector({
                 <span className="icon is-small">
                   <i className="fas fa-check"></i>
                 </span>
-              )}{" "}
+              )}
               <span>{column}</span>
             </button>
           </li>

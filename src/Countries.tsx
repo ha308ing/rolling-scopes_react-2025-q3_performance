@@ -69,10 +69,7 @@ function Countries() {
         </button>
       </div>
 
-      <div
-        className="table-container"
-        style={{ maxBlockSize: "90vh", overflowY: "auto" }}
-      >
+      <div className="table-container">
         <table className="table is-bordered is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -84,15 +81,24 @@ function Countries() {
             </tr>
           </thead>
           <tbody>
-            {_countries.map((country) => (
-              <tr key={"row_" + country.country}>
+            {_countries.map((country, index) => (
+              <tr key={"row_" + index}>
                 <td>{country.country}</td>
                 <td>{country.iso_code}</td>
-                {columns.map((col) => (
-                  <td key={"td_" + country.country + col}>
-                    {country.info?.[col] ?? "N/A"}
-                  </td>
-                ))}
+                {columns.map((col) => {
+                  const value = country.info?.[col] ?? "N/A";
+
+                  return (
+                    <td
+                      className="td"
+                      data-year={yearFilter}
+                      key={"td_" + col + yearFilter}
+                      data-key={"td_" + col + yearFilter}
+                    >
+                      {value}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
